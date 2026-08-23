@@ -1,0 +1,6 @@
+{
+  "name": "VIREON — Creator Economy Marketplace",
+  "description": "The Creator Economy Marketplace for Creators, Brands & Marketers. Create, Sell, Get Hired, Promote, Earn with Creator Passport, Opportunity Radar, Campaign Engine, and VIREON Escrow.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
