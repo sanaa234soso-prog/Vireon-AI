@@ -43,7 +43,7 @@ import {
   DEFAULT_PAYMENTS,
   DEFAULT_TASKS,
   DEFAULT_WATCHDOG_METRICS,
-} from './data/defaultData.js';
+} from './data/defaultData.ts';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('command');
