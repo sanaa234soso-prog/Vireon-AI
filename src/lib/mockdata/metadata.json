@@ -1,0 +1,6 @@
+{
+  "name": "Vireon AI Command Center",
+  "description": "Production-ready 24/7 autonomous AI operations system for Vireon with multi-agent orchestration, watchdog monitoring, real Whop & GitHub integrations, and Owner controls.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
