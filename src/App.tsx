@@ -128,20 +128,105 @@ export default function App() {
     }
   };
 
-  const handleApprovalDecision = async (id: string, decision: 'approved' | 'rejected', notes?: string) => {
-    try {
-      const res = await fetch(`/api/approvals/${id}/decide`, {
+  const handleApprovalDecision = async (
+  id: string,
+  decision: 'approved' | 'rejected',
+  notes?: string
+) => {
+  try {
+    console.log('[OWNER] Decision:', {
+      id,
+      decision,
+      notes,
+    });
+
+    const response = await fetch(
+      `/api/approvals/${encodeURIComponent(id)}/decide`,
+      {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ decision, notes }),
-      });
-      if (res.ok) {
-        fetchFullState();
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          decision,
+          notes: notes?.trim() || '',
+        }),
       }
-    } catch (err) {
-      console.error('Error deciding approval:', err);
+    );
+
+    const contentType =
+      response.headers.get('content-type') || '';
+
+    let result: any = null;
+
+    if (contentType.includes('application/json')) {
+      result = await response.json();
+    } else {
+      const text = await response.text();
+
+      console.error('[OWNER] Server response:', text);
+
+      throw new Error(
+        `الخادم لم يرجع JSON. HTTP ${response.status}`
+      );
     }
-  };
+
+    if (!response.ok || !result?.success) {
+      throw new Error(
+        result?.error ||
+          `فشل تنفيذ القرار. HTTP ${response.status}`
+      );
+    }
+
+    // تحديث حالة الموافقة مباشرة
+    setApprovals((current) =>
+      current.map((approval) =>
+        approval.id === id
+          ? {
+              ...approval,
+              status: decision,
+              resolvedAt:
+                result.data?.resolvedAt ||
+                new Date().toISOString(),
+              resolvedBy:
+                result.data?.resolvedBy ||
+                owner.email,
+              notes:
+                notes?.trim() ||
+                approval.notes,
+            }
+          : approval
+      )
+    );
+
+    // مزامنة الحالة مع الخادم
+    await fetchFullState();
+
+    console.log(
+      `[OWNER] ${decision.toUpperCase()} completed successfully`
+    );
+
+    return result;
+
+  } catch (error) {
+    console.error(
+      '[OWNER] Approval decision failed:',
+      error
+    );
+
+    const message =
+      error instanceof Error
+        ? error.message
+        : 'حدث خطأ غير معروف.';
+
+    window.alert(
+      `فشل تنفيذ القرار:\n\n${message}`
+    );
+
+    throw error;
+  }
+};
 
   const handleDirectAgentTask = async (agentId: string, instruction: string) => {
     const fullCmd = `[Direct Task for ${agentId.toUpperCase()}]: ${instruction}`;
