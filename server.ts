@@ -174,83 +174,175 @@ async function startServer() {
     } catch (e: any) {
       res.status(500).json({ success: false, error: e.message });
     }
-  });
+  app.post('/api/approvals/:id/decide', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { decision, notes } = req.body ?? {};
 
-  app.post('/api/auth/verify-otp', async (req, res) => {
-    try {
-      const { email, code, fullName, role, bio, country, language } = req.body;
-
-      if (!email || !code) {
-        res.status(400).json({
-          success: false,
-          error: 'البريد الإلكتروني ورمز التحقق مطلوبان'
-        });
-        return;
-      }
-
-      // 1. Verify the OTP through server-authoritative service
-      const verifyResult = await otpService.verifyOtp({
-        email,
-        code,
-        fullName
+    if (decision !== 'approved' && decision !== 'rejected') {
+      return res.status(400).json({
+        success: false,
+        error: 'Decision must be approved or rejected',
       });
-
-      if (!verifyResult.success) {
-        res.status(400).json(verifyResult);
-        return;
-      }
-
-      // 2. Locate or create user in persistent DB
-      let user = await db.getUserByEmail(email);
-
-      if (user) {
-        // Update user to verified status in PostgreSQL
-        const updatedFields: any = {
-          isVerified: true
-        };
-        if (fullName && fullName.trim().length >= 2) {
-          updatedFields.fullName = fullName.trim();
-        }
-        user = await db.updateUser(user.id, updatedFields) || user;
-      } else {
-        // Enforce required full name upon account creation
-        const resolvedName = fullName?.trim() || verifyResult.user?.fullName || email.split('@')[0];
-        const assignedRole = (role === 'admin' ? 'creator' : (role || 'customer'));
-
-        user = await db.createUser({
-          email: email.trim().toLowerCase(),
-          fullName: resolvedName,
-          role: assignedRole,
-          bio: bio || (assignedRole === 'creator' ? 'Verified Content Creator & UGC Specialist' : assignedRole === 'brand' ? 'Brand Partner & Growth Marketer' : 'Digital Products & UGC Buyer'),
-          country: country || 'Saudi Arabia',
-          language: language || 'Arabic, English',
-          avatarUrl: `https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80`,
-          isVerified: true
-        });
-
-        // If creator, create default passport
-        if (assignedRole === 'creator') {
-          await db.getCreatorPassport(user.id);
-        }
-      }
-
-      if (user.isBanned) {
-        res.status(403).json({ error: 'User account is suspended' });
-        return;
-      }
-
-      const token = jwtService.signToken(user);
-
-      res.status(200).json({
-        success: true,
-        message: 'تم التحقق من البريد الإلكتروني وتفعيل الحساب بنجاح (Email Verified)',
-        token,
-        user
-      });
-    } catch (e: any) {
-      res.status(500).json({ success: false, error: e.message });
     }
-  });
+
+    const approval = store.resolveApproval(id, decision, notes || '');
+
+    if (!approval) {
+      return res.status(404).json({
+        success: false,
+        error: 'Approval request not found',
+      });
+    }
+
+    // ============================
+    // OWNER REJECTED
+    // ============================
+    if (decision === 'rejected') {
+      if (approval.taskId) {
+        store.updateTask(approval.taskId, {
+          status: 'failed',
+          approvedBy: store.getState().owner.email,
+          approvedAt: new Date().toISOString(),
+          stage: 'report',
+          resultSummary:
+            `Action rejected by Owner: ${
+              notes || 'Authorization withheld.'
+            }`,
+        });
+      }
+
+      store.addLog({
+        agentId: 'security',
+        level: 'warn',
+        module: 'Owner Gatekeeper',
+        message:
+          `Owner REJECTED approval #${id} for task "${approval.taskTitle}"`,
+      });
+
+      return res.json({
+        success: true,
+        decision: 'rejected',
+        executed: false,
+        data: approval,
+      });
+    }
+
+    // ============================
+    // OWNER APPROVED
+    // ============================
+
+    if (!approval.taskId) {
+      return res.status(400).json({
+        success: false,
+        error: 'Approval has no associated task.',
+      });
+    }
+
+    // لا نضع completed قبل نجاح التنفيذ
+    store.updateTask(approval.taskId, {
+      status: 'in_progress',
+      approvedBy: store.getState().owner.email,
+      approvedAt: new Date().toISOString(),
+      stage: 'deploy',
+      resultSummary:
+        'Owner approved the action. Execution started.',
+    });
+
+    store.addLog({
+      agentId: 'security',
+      level: 'success',
+      module: 'Owner Gatekeeper',
+      message:
+        `Owner APPROVED approval #${id}. Execution started for task "${approval.taskTitle}"`,
+    });
+
+    try {
+      await deployLiveHotPatch(
+        {
+          title: `Owner Approved: ${approval.taskTitle.slice(0, 40)}`,
+
+          description:
+            `Executing approved action "${approval.taskTitle}" in production environment.`,
+
+          agent: approval.agent,
+
+          targetEnvironment: 'production',
+
+          codeDiff: approval.payload?.commandOrQuery
+            ? `+ /* OWNER APPROVED ACTION */\n+ ${approval.payload.commandOrQuery}`
+            : undefined,
+        },
+
+        store.getState().owner.name
+      );
+
+      // التنفيذ نجح فعليًا
+      store.updateTask(approval.taskId, {
+        status: 'completed',
+        stage: 'report',
+        resultSummary:
+          'Owner approved the action and the production execution completed successfully.',
+      });
+
+      store.addLog({
+        agentId: 'devops',
+        level: 'success',
+        module: 'Deployment Engine',
+        message:
+          `Approved task ${approval.taskId} executed successfully in production.`,
+      });
+
+      return res.json({
+        success: true,
+        decision: 'approved',
+        executed: true,
+        data: approval,
+      });
+
+    } catch (executionError: any) {
+
+      // التنفيذ فشل فعليًا
+      store.updateTask(approval.taskId, {
+        status: 'failed',
+        stage: 'report',
+        resultSummary:
+          `Execution failed after Owner approval: ${
+            executionError?.message || 'Unknown execution error'
+          }`,
+      });
+
+      store.addLog({
+        agentId: 'devops',
+        level: 'error',
+        module: 'Deployment Engine',
+        message:
+          `Approved task ${approval.taskId} failed: ${
+            executionError?.message || 'Unknown execution error'
+          }`,
+      });
+
+      return res.status(500).json({
+        success: false,
+        decision: 'approved',
+        executed: false,
+        error:
+          executionError?.message ||
+          'Approved action failed during execution.',
+      });
+    }
+
+  } catch (err: any) {
+    console.error('Owner approval error:', err);
+
+    return res.status(500).json({
+      success: false,
+      error:
+        err?.message ||
+        'Failed to process Owner approval.',
+    });
+  }
+
 
   // Direct Google Authentication Endpoint
   app.post('/api/auth/google', async (req, res) => {
