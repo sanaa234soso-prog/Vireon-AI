@@ -1,5 +1,20 @@
 [
   {
+    "actor": {
+      "type": "owner",
+      "id": "sadeksanae50@gmail.com",
+      "name": "Owner"
+    },
+    "action": "SYSTEM_BACKUP_CREATED",
+    "targetAppName": "جميع تطبيقات فايريون وقواعد البيانات",
+    "category": "backup",
+    "severity": "info",
+    "details": "تم إنشاء نسخة احتياطية مشفرة بنجاح [bkp-1787895814107]: نسخة احتياطية فورية شاملة (٨:٤٣:٣٢ ص)",
+    "id": "audit-814107",
+    "timestamp": "2026-08-28T05:43:34.107Z",
+    "hashSha256": "dc85a060b3791c5f21a99d65f144fc99c9762b71b35f0d2396fac470a7d01d92"
+  },
+  {
     "id": "audit-001",
     "timestamp": "2026-08-28T00:49:43.085Z",
     "actor": {
