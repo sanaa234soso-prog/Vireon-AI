@@ -1,5 +1,25 @@
 [
   {
+    "id": "bkp-1787895814107",
+    "title": "نسخة احتياطية فورية شاملة (٨:٤٣:٣٢ ص)",
+    "createdAt": "2026-08-28T05:43:34.107Z",
+    "sizeKb": 14989,
+    "appName": "جميع تطبيقات فايريون وقواعد البيانات",
+    "triggerType": "manual_owner",
+    "status": "verified",
+    "componentsIncluded": [
+      "Database State & Collections",
+      "Secrets Vault & API Tokens (Zero-Trust)",
+      "AI Learning Knowledge Nodes",
+      "Shared Agent Memory Blackboard",
+      "Live Site Config & Design Tokens",
+      "Self-Healing & Task Pipelines"
+    ],
+    "checksum": "sha256:6c9dbbc60e0e7df90e5e25cf400f1413029b5f09b65158b21cae8df526b95214",
+    "restorable": true,
+    "version": "2.5.0-ai-workforce"
+  },
+  {
     "id": "bkp-2026-08-23-01",
     "title": "نسخة احتياطية شاملة - التحديث المعماري 2.5 (Vireon AI Core)",
     "createdAt": "2026-08-27T23:04:43.085Z",
