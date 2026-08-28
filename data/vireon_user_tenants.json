@@ -1,0 +1,54 @@
+{
+  "websites": [
+    {
+      "id": "site-merchant-1",
+      "userId": "usr-demo-merchant-1",
+      "userEmail": "merchant@storeflow.io",
+      "name": "StoreFlow Fashion Boutique",
+      "url": "https://storeflow-fashion.shop",
+      "category": "e_commerce",
+      "environment": "production",
+      "status": "active",
+      "description": "متجر أزياء متكامل مربوط ببوابة دفع Whop و Shopify API مع إدارة مخزون آلية.",
+      "webhookUrl": "https://storeflow-fashion.shop/api/webhooks/vireon",
+      "customApiKeyMasked": "whop_live_•••••••9a3",
+      "sslStatus": "valid",
+      "healthScore": 98,
+      "uptimePercent": 99.95,
+      "latencyMs": 82,
+      "autoHealingEnabled": true,
+      "lastCheckedAt": "2026-08-28T01:04:43.100Z",
+      "createdAt": "2026-08-24T01:04:43.100Z",
+      "updatedAt": "2026-08-28T01:04:43.100Z",
+      "analytics": {
+        "pageViews24h": 14280,
+        "uptimePercent": 99.95,
+        "errorRatePercent": 0.04,
+        "avgResponseTimeMs": 82,
+        "lastAuditSummary": "الأداء ممتاز، لا توجد ثغرات أمنية معلقة، شهادة SSL صالحة لمدة 180 يوماً."
+      },
+      "aiRecommendations": [
+        {
+          "id": "rec-1",
+          "category": "conversion",
+          "title": "تفعيل تسريع إتمام الدفع الفوري (Express Checkout)",
+          "description": "رصد وكيل المبيعات إمكانية رفع نسبة التحويل بنسبة 14% عبر تقليل خطوات الدفع.",
+          "impact": "high",
+          "suggestedAction": "دمج Whop 1-Click Payment Widget",
+          "timestamp": "2026-08-28T01:04:43.100Z"
+        },
+        {
+          "id": "rec-2",
+          "category": "seo",
+          "title": "تحسين وسوم OpenGraph للمنتجات الجديدة",
+          "description": "إضافة وسوم Schema.org Rich Snippets للمنتجات لرفع الترتيب في محركات البحث.",
+          "impact": "medium",
+          "suggestedAction": "تحديث بيانات meta-tags التلقائية",
+          "timestamp": "2026-08-28T01:04:43.100Z"
+        }
+      ]
+    }
+  ],
+  "credentials": [],
+  "instructions": []
+}
