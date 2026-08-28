@@ -1,0 +1,53 @@
+{
+  "name": "Vireon AI Command Center",
+  "short_name": "Vireon AI",
+  "description": "نظام تشغيل وإدارة ذاتي 24/7 لفايريون مع أسطول عملاء ذكاء اصطناعي وخزنة الرموز والمراقبة المستمرة",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#09090b",
+  "theme_color": "#10b981",
+  "dir": "rtl",
+  "lang": "ar",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities", "business"],
+  "shortcuts": [
+    {
+      "name": "مركز القيادة",
+      "short_name": "القيادة",
+      "description": "إرسال أوامر مباشرة للأسطول الذكي",
+      "url": "/?tab=command",
+      "icons": [{ "src": "/icon.svg", "sizes": "96x96" }]
+    },
+    {
+      "name": "أسطول الذكاء الاصطناعي",
+      "short_name": "الوكلاء",
+      "description": "متابعة أداء الـ 14 وكيلاً",
+      "url": "/?tab=agents",
+      "icons": [{ "src": "/icon.svg", "sizes": "96x96" }]
+    },
+    {
+      "name": "خزنة الرموز والتطبيقات",
+      "short_name": "الخزنة",
+      "description": "إدارة التطبيقات والرموز السرية",
+      "url": "/?tab=integrations",
+      "icons": [{ "src": "/icon.svg", "sizes": "96x96" }]
+    },
+    {
+      "name": "موافقات المالك",
+      "short_name": "الموافقات",
+      "description": "مراجعة واعتماد طلبات المالك",
+      "url": "/?tab=approvals",
+      "icons": [{ "src": "/icon.svg", "sizes": "96x96" }]
+    }
+  ]
+}
