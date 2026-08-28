@@ -1,6 +1,6 @@
 {
-  "name": "VIREON — Creator Economy Marketplace",
-  "description": "The Creator Economy Marketplace for Creators, Brands & Marketers. Create, Sell, Get Hired, Promote, Earn with Creator Passport, Opportunity Radar, Campaign Engine, and VIREON Escrow.",
+  "name": "Vireon AI Command Center",
+  "description": "منصة AI Workforce متكاملة مع غرفة قيادة خاصة للمالك مع صندوق توجيه مباشر للوكلاء وخزنة مفاتيح ذكية، بوابة مستخدمين ومتاجر مستقلة مع عزل أمني تام للبيانات، واستشفاء ذاتي عبر GitHub و Vercel.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
