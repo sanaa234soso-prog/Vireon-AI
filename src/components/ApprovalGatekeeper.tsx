@@ -9,27 +9,55 @@ import {
   Lock,
   Server,
   UserCheck,
+  Loader2,
+  Check,
 } from 'lucide-react';
 import { ApprovalRequest } from '../types.js';
 
 interface ApprovalGatekeeperProps {
   approvals: ApprovalRequest[];
-  onDecide: (id: string, decision: 'approved' | 'rejected', notes?: string) => Promise<void>;
+  onDecide: (id: string, decision: 'approved' | 'rejected', notes?: string) => Promise<{ success: boolean; error?: string }>;
 }
 
 export default function ApprovalGatekeeper({ approvals, onDecide }: ApprovalGatekeeperProps) {
   const [decidingId, setDecidingId] = useState<string | null>(null);
+  const [decidingAction, setDecidingAction] = useState<'approved' | 'rejected' | null>(null);
   const [notes, setNotes] = useState<{ [key: string]: string }>({});
+  const [feedback, setFeedback] = useState<{ id: string; success: boolean; message: string } | null>(null);
 
   const pendingApprovals = approvals.filter((a) => a.status === 'pending');
   const resolvedApprovals = approvals.filter((a) => a.status !== 'pending');
 
   const handleAction = async (id: string, decision: 'approved' | 'rejected') => {
     setDecidingId(id);
+    setDecidingAction(decision);
+    setFeedback(null);
     try {
-      await onDecide(id, decision, notes[id]);
+      const res = await onDecide(id, decision, notes[id]);
+      if (res.success) {
+        setFeedback({
+          id,
+          success: true,
+          message: decision === 'approved' 
+            ? 'تم اعتماد الطلب ونشر التغييرات على بيئة الإنتاج المباشرة بنجاح!' 
+            : 'تم رفض العملية وإلغاؤها وتوثيق السبب في سجل التدقيق.',
+        });
+      } else {
+        setFeedback({
+          id,
+          success: false,
+          message: res.error || 'حدث خطأ أثناء معالجة الطلب، يرجى المحاولة ثانية.',
+        });
+      }
+    } catch (err: any) {
+      setFeedback({
+        id,
+        success: false,
+        message: err.message || 'حدث خطأ في الاتصال بالخادم.',
+      });
     } finally {
       setDecidingId(null);
+      setDecidingAction(null);
     }
   };
 
@@ -38,13 +66,15 @@ export default function ApprovalGatekeeper({ approvals, onDecide }: ApprovalGate
       case 'destructive_db':
         return { label: 'تعديل بنية قاعدة بيانات حساسة', color: 'bg-rose-950 text-rose-300 border-rose-800' };
       case 'production_deploy':
-        return { label: 'إطلاق على بيئة الإنتاج المباشرة', color: 'bg-amber-950 text-amber-300 border-amber-800' };
+        return { label: 'إطلاق على بيئة الإنتاج المباشرة (Self-Healing Gate)', color: 'bg-amber-950 text-amber-300 border-amber-800' };
+      case 'server_recovery':
+        return { label: 'استرجاع وإلغاء عزل الخادم (Server Recovery)', color: 'bg-emerald-950 text-emerald-300 border-emerald-800' };
       case 'payment_config':
         return { label: 'تعديل إعدادات بوابة الدفع', color: 'bg-purple-950 text-purple-300 border-purple-800' };
       case 'security_role_change':
         return { label: 'تعديل الصلاحيات والأدوار الأمنية', color: 'bg-blue-950 text-blue-300 border-blue-800' };
       default:
-        return { label: 'عملية حرجة تتطلب الموافقة', color: 'bg-zinc-800 text-zinc-300 border-zinc-700' };
+        return { label: 'عملية حرجة تتطلب موافقة المالك', color: 'bg-zinc-800 text-zinc-300 border-zinc-700' };
     }
   };
 
@@ -67,7 +97,7 @@ export default function ApprovalGatekeeper({ approvals, onDecide }: ApprovalGate
                 </span>
               </div>
               <p className="text-xs text-zinc-400 mt-0.5">
-                تتطلب تعديلات قواعد البيانات الحساسة، وإطلاقات الإنتاج المباشرة، وتغييرات مسارات الدفع إذناً وتوقيعاً مباشراً من المالك.
+                تتطلب تعديلات قواعد البيانات الحساسة، وإطلاقات الإنتاج المباشرة، وتغييرات مسارات الدفع إذناً وتوقيعاً مباشراً من المالك (sadeksanae50@gmail.com).
               </p>
             </div>
           </div>
@@ -80,6 +110,24 @@ export default function ApprovalGatekeeper({ approvals, onDecide }: ApprovalGate
           </div>
         </div>
       </div>
+
+      {/* Live Feedback Toast */}
+      {feedback && (
+        <div
+          className={`p-4 rounded-xl border flex items-center gap-3 text-xs font-medium transition-all ${
+            feedback.success
+              ? 'bg-emerald-950/80 border-emerald-800 text-emerald-200'
+              : 'bg-rose-950/80 border-rose-800 text-rose-200'
+          }`}
+        >
+          {feedback.success ? (
+            <Check className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+          ) : (
+            <AlertTriangle className="w-4 h-4 text-rose-400 flex-shrink-0" />
+          )}
+          <span>{feedback.message}</span>
+        </div>
+      )}
 
       {/* Pending Approvals List */}
       <div className="space-y-4">
@@ -113,7 +161,7 @@ export default function ApprovalGatekeeper({ approvals, onDecide }: ApprovalGate
                       </span>
                       <span className="text-xs font-mono text-zinc-400">طلب #{req.id}</span>
                       <span className="text-xs font-mono text-zinc-500">
-                        العميل: <strong className="text-emerald-400">{req.agent}</strong>
+                        الوكيل: <strong className="text-emerald-400">{req.agent}</strong>
                       </span>
                     </div>
                     <h4 className="text-sm font-bold text-white">{req.taskTitle}</h4>
@@ -162,7 +210,8 @@ export default function ApprovalGatekeeper({ approvals, onDecide }: ApprovalGate
                     placeholder="ملاحظات الاعتماد والتوثيق للمالك (اختياري)..."
                     value={notes[req.id] || ''}
                     onChange={(e) => setNotes({ ...notes, [req.id]: e.target.value })}
-                    className="w-full sm:w-80 px-3 py-1.5 rounded bg-zinc-900 border border-zinc-800 text-xs text-zinc-200 placeholder-zinc-500 font-sans"
+                    disabled={isProcessing}
+                    className="w-full sm:w-80 px-3 py-1.5 rounded bg-zinc-900 border border-zinc-800 text-xs text-zinc-200 placeholder-zinc-500 font-sans disabled:opacity-50"
                   />
 
                   <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
@@ -172,7 +221,11 @@ export default function ApprovalGatekeeper({ approvals, onDecide }: ApprovalGate
                       disabled={isProcessing}
                       className="flex items-center gap-1.5 px-3.5 py-1.5 rounded bg-rose-950/80 hover:bg-rose-900 text-rose-200 border border-rose-800 text-xs font-mono font-bold transition-all disabled:opacity-50"
                     >
-                      <XCircle className="w-3.5 h-3.5" />
+                      {isProcessing && decidingAction === 'rejected' ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <XCircle className="w-3.5 h-3.5" />
+                      )}
                       <span>رفض وإلغاء</span>
                     </button>
 
@@ -182,7 +235,11 @@ export default function ApprovalGatekeeper({ approvals, onDecide }: ApprovalGate
                       disabled={isProcessing}
                       className="flex items-center gap-1.5 px-4 py-1.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-mono font-bold transition-all disabled:opacity-50 shadow-md"
                     >
-                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      {isProcessing && decidingAction === 'approved' ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                      )}
                       <span>موافقة واعتماد التنفيذ</span>
                     </button>
                   </div>
