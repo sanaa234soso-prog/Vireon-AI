@@ -5,6 +5,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Navigation from './components/Navigation.js';
+import MobileBottomNav from './components/MobileBottomNav.js';
+import InstallPwaModal from './components/InstallPwaModal.js';
 import CommandTerminal from './components/CommandTerminal.js';
 import AgentFleetGrid from './components/AgentFleetGrid.js';
 import TaskPipelineView from './components/TaskPipelineView.js';
@@ -17,6 +19,15 @@ import LiveDeploymentHub from './components/LiveDeploymentHub.js';
 import WorkersAndQueueView from './components/WorkersAndQueueView.js';
 import FrontendDesignStudio from './components/FrontendDesignStudio.js';
 import AgentMemoryBusView from './components/AgentMemoryBusView.js';
+import AIWorkforceOrchestratorView from './components/AIWorkforceOrchestratorView.js';
+import SelfHealingDashboard from './components/SelfHealingDashboard.js';
+import AILearningKnowledgeHub from './components/AILearningKnowledgeHub.js';
+import MultiAppWorkspace from './components/MultiAppWorkspace.js';
+import ObservabilityAndAuditHub from './components/ObservabilityAndAuditHub.js';
+import { OpenSourceAISandbox } from './components/OpenSourceAISandbox.js';
+import { OwnerCommandCenter } from './components/OwnerCommandCenter.js';
+import { UserPortal } from './components/UserPortal.js';
+import FileSyncDashboard from './components/FileSyncDashboard.js';
 import {
   AgentProfile,
   ApprovalRequest,
@@ -30,6 +41,7 @@ import {
   WatchdogMetric,
   WhopPaymentRecord,
   LiveSiteConfig,
+  UserAccount,
 } from './types.js';
 import {
   DEFAULT_AGENTS,
@@ -43,10 +55,16 @@ import {
   DEFAULT_PAYMENTS,
   DEFAULT_TASKS,
   DEFAULT_WATCHDOG_METRICS,
-} from './data/defaultData.ts';
+} from './data/defaultData.js';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('command');
+  const [activeTab, setActiveTab] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('tab') || 'owner_command';
+  });
+  const [currentUser, setCurrentUser] = useState<UserAccount | null>(null);
+  const [authToken, setAuthToken] = useState<string>('');
+  const [isOwner, setIsOwner] = useState<boolean>(true);
   const [overview, setOverview] = useState<SystemOverview | null>(DEFAULT_OVERVIEW);
   const [owner, setOwner] = useState<OwnerProfile>(DEFAULT_OWNER);
   const [agents, setAgents] = useState<AgentProfile[]>(DEFAULT_AGENTS);
@@ -60,6 +78,7 @@ export default function App() {
   const [logs, setLogs] = useState<SystemLogEntry[]>(DEFAULT_LOGS);
   const [liveConfig, setLiveConfig] = useState<LiveSiteConfig | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
 
   const fetchFullState = useCallback(async () => {
     try {
@@ -113,6 +132,13 @@ export default function App() {
     return () => clearInterval(interval);
   }, [fetchFullState]);
 
+  const handleTabChange = (newTab: string) => {
+    setActiveTab(newTab);
+    const url = new URL(window.location.href);
+    url.searchParams.set('tab', newTab);
+    window.history.replaceState({}, '', url.toString());
+  };
+
   const handleSwitchEnvironment = async (env: 'production' | 'staging') => {
     try {
       const res = await fetch('/api/system/switch-env', {
@@ -128,105 +154,29 @@ export default function App() {
     }
   };
 
-  const handleApprovalDecision = async (
-  id: string,
-  decision: 'approved' | 'rejected',
-  notes?: string
-) => {
-  try {
-    console.log('[OWNER] Decision:', {
-      id,
-      decision,
-      notes,
-    });
-
-    const response = await fetch(
-      `/api/approvals/${encodeURIComponent(id)}/decide`,
-      {
+  const handleApprovalDecision = async (id: string, decision: 'approved' | 'rejected', notes?: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const res = await fetch(`/api/approvals/${id}/decide`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Accept: 'application/json',
+          'x-owner-email': owner.email,
+          'x-owner-role': 'super_admin',
         },
-        body: JSON.stringify({
-          decision,
-          notes: notes?.trim() || '',
-        }),
+        body: JSON.stringify({ decision, notes }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        await fetchFullState();
+        return { success: true };
+      } else {
+        return { success: false, error: data.error || 'Failed to resolve approval' };
       }
-    );
-
-    const contentType =
-      response.headers.get('content-type') || '';
-
-    let result: any = null;
-
-    if (contentType.includes('application/json')) {
-      result = await response.json();
-    } else {
-      const text = await response.text();
-
-      console.error('[OWNER] Server response:', text);
-
-      throw new Error(
-        `الخادم لم يرجع JSON. HTTP ${response.status}`
-      );
+    } catch (err: any) {
+      console.error('Error deciding approval:', err);
+      return { success: false, error: err.message || 'Network error' };
     }
-
-    if (!response.ok || !result?.success) {
-      throw new Error(
-        result?.error ||
-          `فشل تنفيذ القرار. HTTP ${response.status}`
-      );
-    }
-
-    // تحديث حالة الموافقة مباشرة
-    setApprovals((current) =>
-      current.map((approval) =>
-        approval.id === id
-          ? {
-              ...approval,
-              status: decision,
-              resolvedAt:
-                result.data?.resolvedAt ||
-                new Date().toISOString(),
-              resolvedBy:
-                result.data?.resolvedBy ||
-                owner.email,
-              notes:
-                notes?.trim() ||
-                approval.notes,
-            }
-          : approval
-      )
-    );
-
-    // مزامنة الحالة مع الخادم
-    await fetchFullState();
-
-    console.log(
-      `[OWNER] ${decision.toUpperCase()} completed successfully`
-    );
-
-    return result;
-
-  } catch (error) {
-    console.error(
-      '[OWNER] Approval decision failed:',
-      error
-    );
-
-    const message =
-      error instanceof Error
-        ? error.message
-        : 'حدث خطأ غير معروف.';
-
-    window.alert(
-      `فشل تنفيذ القرار:\n\n${message}`
-    );
-
-    throw error;
-  }
-};
+  };
 
   const handleDirectAgentTask = async (agentId: string, instruction: string) => {
     const fullCmd = `[Direct Task for ${agentId.toUpperCase()}]: ${instruction}`;
@@ -268,14 +218,17 @@ export default function App() {
       {/* Top Header & Executive Navigation */}
       <Navigation
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={handleTabChange}
         overview={overview}
         onSwitchEnv={handleSwitchEnvironment}
         pendingApprovalsCount={pendingApprovalsCount}
+        onOpenInstallModal={() => setIsInstallModalOpen(true)}
+        currentUser={currentUser}
+        isOwner={isOwner}
       />
 
       {/* Main Command Room Body */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 pb-24 md:pb-6">
         {isLoading ? (
           <div className="h-96 flex flex-col items-center justify-center space-y-3">
             <div className="w-8 h-8 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin"></div>
@@ -285,6 +238,33 @@ export default function App() {
           </div>
         ) : (
           <div>
+            {/* 1. Private Owner Executive Page with Direct AI Command Box & Secrets */}
+            {activeTab === 'owner_command' && (
+              <OwnerCommandCenter
+                ownerEmail={owner.email}
+                onRefreshData={fetchFullState}
+              />
+            )}
+
+            {/* 2. Isolated Multi-Tenant User Portal with Login/Signup & My Websites */}
+            {activeTab === 'user_portal' && (
+              <UserPortal
+                currentUser={currentUser}
+                onLoginSuccess={(user, token) => {
+                  setCurrentUser(user);
+                  setAuthToken(token);
+                  setIsOwner(user.role === 'owner');
+                  localStorage.setItem('vireon_token', token);
+                }}
+                onLogout={() => {
+                  setCurrentUser(null);
+                  setAuthToken('');
+                  setIsOwner(false);
+                  localStorage.removeItem('vireon_token');
+                }}
+              />
+            )}
+
             {activeTab === 'command' && (
               <CommandTerminal
                 agents={agents}
@@ -293,10 +273,40 @@ export default function App() {
               />
             )}
 
+            {activeTab === 'workforce' && (
+              <AIWorkforceOrchestratorView
+                agents={agents}
+              />
+            )}
+
+            {activeTab === 'selfhealing' && (
+              <SelfHealingDashboard />
+            )}
+
+            {activeTab === 'opensourceai' && (
+              <OpenSourceAISandbox />
+            )}
+
+            {activeTab === 'learning' && (
+              <AILearningKnowledgeHub />
+            )}
+
+            {activeTab === 'multiapp' && (
+              <MultiAppWorkspace />
+            )}
+
+            {activeTab === 'observability' && (
+              <ObservabilityAndAuditHub />
+            )}
+
             {activeTab === 'deploy' && (
               <LiveDeploymentHub
                 onRefreshAll={fetchFullState}
               />
+            )}
+
+            {activeTab === 'filesync' && (
+              <FileSyncDashboard />
             )}
 
             {activeTab === 'agents' && (
@@ -386,6 +396,20 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* Native App Mobile Bottom Navigation Bar */}
+      <MobileBottomNav
+        activeTab={activeTab}
+        setActiveTab={handleTabChange}
+        pendingApprovalsCount={pendingApprovalsCount}
+        onOpenInstallModal={() => setIsInstallModalOpen(true)}
+      />
+
+      {/* Install PWA Modal */}
+      <InstallPwaModal
+        isOpen={isInstallModalOpen}
+        onClose={() => setIsInstallModalOpen(false)}
+      />
     </div>
   );
 }
