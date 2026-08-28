@@ -1,0 +1,28 @@
+[
+  {
+    "id": "usr-owner-sadek-1",
+    "email": "sadeksanae50@gmail.com",
+    "name": "Sadek Sanae (Owner)",
+    "companyName": "Vireon AI Headquarters",
+    "role": "owner",
+    "createdAt": "2026-08-28T01:04:43.093Z",
+    "lastLoginAt": "2026-08-28T01:04:43.093Z",
+    "status": "active",
+    "mfaEnabled": true,
+    "passwordHash": "ec79883cc921d1177c86e29298ec8ad665f2be5334e1545bc56e42bce0a64818d7d86b592b0d43544a0c0e2e9dff3fbcc4e6c2a22b64fbc907170c478583d9d3",
+    "salt": "db165250734fe7dd2978c53d2d1cb305"
+  },
+  {
+    "id": "usr-demo-merchant-1",
+    "email": "merchant@storeflow.io",
+    "name": "Tariq Al-Mansoor",
+    "companyName": "StoreFlow Ecommerce Ltd",
+    "role": "user",
+    "createdAt": "2026-08-23T01:04:43.099Z",
+    "lastLoginAt": "2026-08-28T01:04:43.099Z",
+    "status": "active",
+    "mfaEnabled": false,
+    "passwordHash": "ef6e8ba911dbe3f975c8c5e809d0692c9eb2a8713723b3625d5c30ba8cae54d1979f19e13af22c2a90cfc9df1f325c3b17e18114d72dec4a165868ee3b3f029c",
+    "salt": "1b1868f8cea168a116638a13a0891bf6"
+  }
+]
