@@ -1,0 +1,39 @@
+[
+  {
+    "id": "bkp-2026-08-23-01",
+    "title": "نسخة احتياطية شاملة - التحديث المعماري 2.5 (Vireon AI Core)",
+    "createdAt": "2026-08-27T23:04:43.085Z",
+    "sizeKb": 14280,
+    "appName": "Vireon AI Command Center",
+    "triggerType": "pre_deploy_snapshot",
+    "status": "verified",
+    "componentsIncluded": [
+      "Database State & Collections",
+      "Secrets Vault & API Tokens (Encrypted)",
+      "AI Learning Knowledge Nodes",
+      "Shared Agent Memory Blackboard",
+      "Live Site Config & Design Tokens"
+    ],
+    "checksum": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "restorable": true,
+    "version": "2.5.0-ai-workforce"
+  },
+  {
+    "id": "bkp-2026-08-22-02",
+    "title": "نسخة احتياطية دورية مجدولة (Daily Automated Snapshot)",
+    "createdAt": "2026-08-27T01:04:43.085Z",
+    "sizeKb": 13950,
+    "appName": "All Connected Apps & Data",
+    "triggerType": "scheduled_auto",
+    "status": "completed",
+    "componentsIncluded": [
+      "Database Schema & Data",
+      "Whop Transactions Ledger",
+      "Agent Task Pipeline Records",
+      "System Audit Logs"
+    ],
+    "checksum": "sha256:9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+    "restorable": true,
+    "version": "2.4.9"
+  }
+]
