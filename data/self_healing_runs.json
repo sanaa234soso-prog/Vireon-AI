@@ -1,0 +1,108 @@
+[
+  {
+    "id": "sh-run-101",
+    "incidentId": "inc-watchdog-01",
+    "appName": "Vireon Core Gateway",
+    "title": "معالجة تسريب اتصال مؤقت في مجمع اتصالات قاعدة البيانات (Connection Pool Starvation)",
+    "rootCauseDiagnosis": "عدم إغلاق مؤشرات الاستعلام في مسار التحليلات المجمعة تسبب في استنزاف مجمع الاتصالات (Connection Pool Exhaustion) عند ذروة الطلبات.",
+    "triggerSource": "watchdog_alert",
+    "status": "completed",
+    "currentStageIndex": 10,
+    "startedAt": "2026-08-28T00:22:43.084Z",
+    "completedAt": "2026-08-28T00:26:43.084Z",
+    "totalDurationMs": 248000,
+    "requiresOwnerApproval": true,
+    "securityVulnerabilitiesFound": 0,
+    "testPassRate": 100,
+    "stagingResponseTimeMs": 28,
+    "autoRollbackTriggered": false,
+    "githubBranch": "fix/self-healing-sh-run-101",
+    "githubPrUrl": "https://github.com/sanaa234soso-prog/vireonn/pull/14",
+    "githubCommitSha": "7f92bc4",
+    "vercelStagingUrl": "https://vireonn-git-fix-self-healing-sh-run-101.vercel.app",
+    "productionDeployedAt": "2026-08-28T00:26:43.084Z",
+    "sandboxDiff": "@@ -42,6 +42,9 @@ export async function queryAnalytics(params) {\n    const client = await pool.connect();\n    try {\n      const res = await client.query(sql, values);\n      return res.rows;\n+  } finally {\n+    client.release(); // Always release connection back to pool\n    }\n  }",
+    "stages": [
+      {
+        "stage": "detect",
+        "name": "1. اكتشاف الخلل والتحذير الفوري",
+        "assignedAgent": "operations",
+        "status": "passed",
+        "durationMs": 1200,
+        "outputLog": "تم رصد ارتفاع زمن استجابة /api/analytics إلى 1420ms وانخفاض معدل الاتصالات المتاحة إلى 2%."
+      },
+      {
+        "stage": "diagnose",
+        "name": "2. تشخيص السبب الجذري (Root Cause Analysis)",
+        "assignedAgent": "engineer",
+        "status": "passed",
+        "durationMs": 4500,
+        "outputLog": "تشخيص فني: تسريب اتصالات في queryAnalytics بسبب فقدان كتلة finally { client.release() }."
+      },
+      {
+        "stage": "sandbox_patch",
+        "name": "3. كتابة الترقيعة البرمجية في بيئة Sandbox المعزولة",
+        "assignedAgent": "developer",
+        "status": "passed",
+        "durationMs": 8200,
+        "outputLog": "تمت كتابة الترقيعة البرمجية مع معالجة الاستثناءات وضمان تحرير الموارد في كل السيناريوهات."
+      },
+      {
+        "stage": "automated_tests",
+        "name": "4. تنفيذ اختبارات الجودة والتحمل التلقائية (QA Suites)",
+        "assignedAgent": "qa",
+        "status": "passed",
+        "durationMs": 14000,
+        "outputLog": "نجاح 48 اختبار وحدة وتكامل. محاكاة 2000 اتصال متزامن دون أي تسريب أو هبوط أداء."
+      },
+      {
+        "stage": "security_scan",
+        "name": "5. الفحص الأمني للثغرات والرموز (Zero-Trust SAST)",
+        "assignedAgent": "security",
+        "status": "passed",
+        "durationMs": 3800,
+        "outputLog": "مسح الكود: 0 ثغرات، 0 تسريب مفاتيح، توافق تام مع سياسات الأمان الصارمة."
+      },
+      {
+        "stage": "code_review",
+        "name": "6. المراجعة الفنية واعتماد المعمارية (Peer Review)",
+        "assignedAgent": "auditor",
+        "status": "passed",
+        "durationMs": 2900,
+        "outputLog": "تمت مراجعة الترقيعة واعتمادها برمجياً دون أي أثر جانبي على الخدمات الأخرى."
+      },
+      {
+        "stage": "staging_verify",
+        "name": "7. إنشاء فرع GitHub وتأكيد النشر التجريبي في Staging",
+        "assignedAgent": "devops",
+        "status": "passed",
+        "durationMs": 18000,
+        "outputLog": "تم إنشاء الفرع fix/self-healing-sh-run-101 ونشر المعاينة في Vercel Staging بنجاح (زمن استجابة 28ms)."
+      },
+      {
+        "stage": "deploy_gate",
+        "name": "8. بوابة اعتماد المالك الإلزامية وتصريح الإنتاج",
+        "assignedAgent": "manager",
+        "status": "passed",
+        "durationMs": 6500,
+        "outputLog": "تم الحصول على موافقة المالك الرسمية (sadeksanae50@gmail.com) لتطبيق الترقيعة في الإنتاج الحي."
+      },
+      {
+        "stage": "telemetry_monitor",
+        "name": "9. تطبيق الترقيعة الساخنة والنشر الحي في الإنتاج",
+        "assignedAgent": "devops",
+        "status": "passed",
+        "durationMs": 30000,
+        "outputLog": "تم دمج الترقيعة وترقية النشر في Vercel Production بنجاح Zero-Downtime مع استقرار تام 100%."
+      },
+      {
+        "stage": "auto_rollback_check",
+        "name": "10. مراقبة المؤشرات وتوثيق المعرفة في AI Learning",
+        "assignedAgent": "manager",
+        "status": "passed",
+        "durationMs": 1500,
+        "outputLog": "لا داعي للاسترجاع (No Rollback Needed). تم توثيق النمط البرمجي في خادم المعرفة للتعلم المستمر."
+      }
+    ]
+  }
+]
