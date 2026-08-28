@@ -1,0 +1,288 @@
+[
+  {
+    "id": "pod-app-01",
+    "appId": "app-01",
+    "appName": "منصة فايريون الرئيسية (Vireon Command Center)",
+    "workspaceId": "ws-app-01-core",
+    "workspacePath": "/workspaces/app-01",
+    "connectionStatus": "connected",
+    "healthScore": 99.8,
+    "roles": [
+      {
+        "role": "engineering",
+        "enabled": true,
+        "assignedAgent": "developer",
+        "status": "active",
+        "activeTasksCount": 2,
+        "lastActionAt": "2026-08-28T01:04:43.085Z"
+      },
+      {
+        "role": "design",
+        "enabled": true,
+        "assignedAgent": "frontend",
+        "status": "active",
+        "activeTasksCount": 1,
+        "lastActionAt": "2026-08-28T01:04:43.085Z"
+      },
+      {
+        "role": "security",
+        "enabled": true,
+        "assignedAgent": "security",
+        "status": "active",
+        "activeTasksCount": 1,
+        "lastActionAt": "2026-08-28T01:04:43.085Z"
+      },
+      {
+        "role": "devops",
+        "enabled": true,
+        "assignedAgent": "devops",
+        "status": "active",
+        "activeTasksCount": 1,
+        "lastActionAt": "2026-08-28T01:04:43.085Z"
+      },
+      {
+        "role": "seo",
+        "enabled": true,
+        "assignedAgent": "seo",
+        "status": "active",
+        "activeTasksCount": 1,
+        "lastActionAt": "2026-08-28T01:04:43.085Z"
+      },
+      {
+        "role": "customer_support",
+        "enabled": true,
+        "assignedAgent": "support",
+        "status": "active",
+        "activeTasksCount": 1,
+        "lastActionAt": "2026-08-28T01:04:43.085Z"
+      },
+      {
+        "role": "data",
+        "enabled": true,
+        "assignedAgent": "analytics",
+        "status": "active",
+        "activeTasksCount": 1,
+        "lastActionAt": "2026-08-28T01:04:43.085Z"
+      }
+    ],
+    "selectedRoleKeys": [
+      "engineering",
+      "design",
+      "security",
+      "devops",
+      "seo",
+      "customer_support",
+      "data"
+    ],
+    "verification": {
+      "healthCheck": {
+        "type": "health_check",
+        "status": "passed",
+        "latencyMs": 18,
+        "statusCode": 200,
+        "message": "Health check passed with HTTP 200 (Core Service Active)",
+        "testedAt": "2026-08-28T01:04:43.085Z"
+      },
+      "apiTest": {
+        "type": "api_test",
+        "status": "passed",
+        "latencyMs": 24,
+        "statusCode": 200,
+        "message": "API test successful with status 200 (Bearer Token Verified)",
+        "testedAt": "2026-08-28T01:04:43.085Z"
+      },
+      "webhookTest": {
+        "type": "webhook_test",
+        "status": "passed",
+        "latencyMs": 31,
+        "statusCode": 200,
+        "message": "Webhook handshake delivered successfully (200)",
+        "testedAt": "2026-08-28T01:04:43.085Z"
+      },
+      "lastVerifiedAt": "2026-08-28T01:04:43.085Z",
+      "allPassed": true
+    },
+    "apiEndpoint": "https://vireon.ai/api/v1/health",
+    "apiKeyMasked": "vr_l••••99a",
+    "webhookUrl": "https://vireon.ai/api/webhooks/pod",
+    "webhookSecretMasked": "whsec_••••4f8a",
+    "orchestratorLinked": true,
+    "taskQueueLinked": true,
+    "isolatedMemoryNamespace": "ns_vireon_core",
+    "createdAt": "2026-08-28T01:04:43.085Z",
+    "updatedAt": "2026-08-28T01:04:43.085Z"
+  },
+  {
+    "id": "pod-app-02",
+    "appId": "app-02",
+    "appName": "متجر فايريون الرقمي (Vireon Digital Storefront)",
+    "workspaceId": "ws-app-02-store",
+    "workspacePath": "/workspaces/app-02",
+    "connectionStatus": "connected",
+    "healthScore": 99.4,
+    "roles": [
+      {
+        "role": "engineering",
+        "enabled": true,
+        "assignedAgent": "developer",
+        "status": "active",
+        "activeTasksCount": 1,
+        "lastActionAt": "2026-08-28T01:04:43.085Z"
+      },
+      {
+        "role": "design",
+        "enabled": true,
+        "assignedAgent": "frontend",
+        "status": "active",
+        "activeTasksCount": 1,
+        "lastActionAt": "2026-08-28T01:04:43.085Z"
+      },
+      {
+        "role": "seo",
+        "enabled": true,
+        "assignedAgent": "seo",
+        "status": "active",
+        "activeTasksCount": 1,
+        "lastActionAt": "2026-08-28T01:04:43.085Z"
+      },
+      {
+        "role": "customer_support",
+        "enabled": true,
+        "assignedAgent": "support",
+        "status": "active",
+        "activeTasksCount": 1,
+        "lastActionAt": "2026-08-28T01:04:43.085Z"
+      },
+      {
+        "role": "data",
+        "enabled": true,
+        "assignedAgent": "analytics",
+        "status": "active",
+        "activeTasksCount": 1,
+        "lastActionAt": "2026-08-28T01:04:43.085Z"
+      }
+    ],
+    "selectedRoleKeys": [
+      "engineering",
+      "design",
+      "seo",
+      "customer_support",
+      "data"
+    ],
+    "verification": {
+      "healthCheck": {
+        "type": "health_check",
+        "status": "passed",
+        "latencyMs": 29,
+        "statusCode": 200,
+        "message": "Health check passed with HTTP 200 in 29ms",
+        "testedAt": "2026-08-28T01:04:43.085Z"
+      },
+      "apiTest": {
+        "type": "api_test",
+        "status": "passed",
+        "latencyMs": 35,
+        "statusCode": 200,
+        "message": "Whop & Storefront API probe passed",
+        "testedAt": "2026-08-28T01:04:43.085Z"
+      },
+      "webhookTest": {
+        "type": "webhook_test",
+        "status": "passed",
+        "latencyMs": 42,
+        "statusCode": 200,
+        "message": "Webhook handshake delivered successfully (200)",
+        "testedAt": "2026-08-28T01:04:43.085Z"
+      },
+      "lastVerifiedAt": "2026-08-28T01:04:43.085Z",
+      "allPassed": true
+    },
+    "apiEndpoint": "https://store.vireon.ai/api/health",
+    "apiKeyMasked": "sk_w••••11c",
+    "webhookUrl": "https://store.vireon.ai/api/webhooks/whop",
+    "webhookSecretMasked": "whsec_••••882b",
+    "orchestratorLinked": true,
+    "taskQueueLinked": true,
+    "isolatedMemoryNamespace": "ns_vireon_store",
+    "createdAt": "2026-08-28T01:04:43.085Z",
+    "updatedAt": "2026-08-28T01:04:43.085Z"
+  },
+  {
+    "id": "pod-app-03",
+    "appId": "app-03",
+    "appName": "تطبيق فايريون للهواتف الذكية (Vireon Mobile Companion)",
+    "workspaceId": "ws-app-03-mobile",
+    "workspacePath": "/workspaces/app-03",
+    "connectionStatus": "connected",
+    "healthScore": 99.6,
+    "roles": [
+      {
+        "role": "engineering",
+        "enabled": true,
+        "assignedAgent": "developer",
+        "status": "active",
+        "activeTasksCount": 1,
+        "lastActionAt": "2026-08-28T01:04:43.085Z"
+      },
+      {
+        "role": "design",
+        "enabled": true,
+        "assignedAgent": "frontend",
+        "status": "active",
+        "activeTasksCount": 1,
+        "lastActionAt": "2026-08-28T01:04:43.085Z"
+      },
+      {
+        "role": "security",
+        "enabled": true,
+        "assignedAgent": "security",
+        "status": "active",
+        "activeTasksCount": 1,
+        "lastActionAt": "2026-08-28T01:04:43.085Z"
+      },
+      {
+        "role": "devops",
+        "enabled": true,
+        "assignedAgent": "devops",
+        "status": "active",
+        "activeTasksCount": 1,
+        "lastActionAt": "2026-08-28T01:04:43.085Z"
+      }
+    ],
+    "selectedRoleKeys": [
+      "engineering",
+      "design",
+      "security",
+      "devops"
+    ],
+    "verification": {
+      "healthCheck": {
+        "type": "health_check",
+        "status": "passed",
+        "latencyMs": 21,
+        "statusCode": 200,
+        "message": "PWA Health check passed with HTTP 200",
+        "testedAt": "2026-08-28T01:04:43.085Z"
+      },
+      "apiTest": {
+        "type": "api_test",
+        "status": "skipped",
+        "message": "PWA Client Direct",
+        "testedAt": "2026-08-28T01:04:43.085Z"
+      },
+      "webhookTest": {
+        "type": "webhook_test",
+        "status": "skipped",
+        "message": "Push Service Worker Endpoint",
+        "testedAt": "2026-08-28T01:04:43.085Z"
+      },
+      "lastVerifiedAt": "2026-08-28T01:04:43.085Z",
+      "allPassed": true
+    },
+    "orchestratorLinked": true,
+    "taskQueueLinked": true,
+    "isolatedMemoryNamespace": "ns_vireon_mobile",
+    "createdAt": "2026-08-28T01:04:43.085Z",
+    "updatedAt": "2026-08-28T01:04:43.085Z"
+  }
+]
