@@ -174,6 +174,7 @@ async function startServer() {
     } catch (e: any) {
       res.status(500).json({ success: false, error: e.message });
     }
+  });
   app.post('/api/approvals/:id/decide', async (req, res) => {
   try {
     const { id } = req.params;
@@ -341,7 +342,8 @@ async function startServer() {
         err?.message ||
         'Failed to process Owner approval.',
     });
-  }
+    }
+  });
 
 
   // Direct Google Authentication Endpoint
