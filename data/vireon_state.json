@@ -17,7 +17,7 @@
       "avatarColor": "emerald",
       "iconName": "Cpu",
       "roleDescription": "Central brain that receives Owner commands, plans multi-agent workflows, assigns tasks, monitors progress, verifies results, and liaises directly with the Owner.",
-      "status": "active",
+      "status": "working",
       "completedTasksCount": 57,
       "activeSince": "2026-07-22T08:43:21.569Z",
       "confidenceScore": 98.4,
@@ -28,9 +28,9 @@
         "Quality & Security Gatekeeper",
         "Owner Reporting & Synthesis"
       ],
-      "lastLog": "تنسيق الخطة الشاملة عبر الوكلاء ومراقبة سلامة الصلاحيات",
-      "lastActiveTimestamp": "2026-08-28T02:42:22.896Z",
-      "currentTaskTitle": "Copy only new or missing files from the current AI"
+      "lastLog": "Evaluating agent authorizations and checking credentials gate.",
+      "lastActiveTimestamp": "2026-08-28T05:34:17.278Z",
+      "currentTaskTitle": "افصل Owner عن Users بشكل كامل. المستخدم العادي بعد"
     },
     {
       "id": "engineer",
@@ -1110,9 +1110,9 @@
       "service": "Vireon Core API Gateway",
       "endpoint": "/api/v1/health",
       "status": "operational",
-      "latencyMs": 37,
+      "latencyMs": 33,
       "uptime24h": 99.98,
-      "lastChecked": "2026-08-28T05:15:52.624Z",
+      "lastChecked": "2026-08-28T05:36:07.730Z",
       "errorRatePercent": 0
     },
     {
@@ -1120,9 +1120,9 @@
       "service": "Whop Webhook Ingestion Pipe",
       "endpoint": "/api/webhooks/whop",
       "status": "operational",
-      "latencyMs": 34,
+      "latencyMs": 37,
       "uptime24h": 100,
-      "lastChecked": "2026-08-28T05:15:52.624Z",
+      "lastChecked": "2026-08-28T05:36:07.730Z",
       "errorRatePercent": 0
     },
     {
@@ -1130,9 +1130,9 @@
       "service": "Marketplace Catalog Service",
       "endpoint": "/api/marketplace/products",
       "status": "operational",
-      "latencyMs": 36,
+      "latencyMs": 38,
       "uptime24h": 99.94,
-      "lastChecked": "2026-08-28T05:15:52.624Z",
+      "lastChecked": "2026-08-28T05:36:07.730Z",
       "errorRatePercent": 0
     },
     {
@@ -1140,9 +1140,9 @@
       "service": "Postgres Database Replica Cluster",
       "endpoint": "db-replica.vireon.internal",
       "status": "operational",
-      "latencyMs": 13,
+      "latencyMs": 11,
       "uptime24h": 99.99,
-      "lastChecked": "2026-08-28T05:15:52.624Z",
+      "lastChecked": "2026-08-28T05:36:07.730Z",
       "errorRatePercent": 0
     },
     {
@@ -1152,7 +1152,7 @@
       "status": "operational",
       "latencyMs": 23,
       "uptime24h": 100,
-      "lastChecked": "2026-08-28T05:15:52.624Z",
+      "lastChecked": "2026-08-28T05:36:07.730Z",
       "errorRatePercent": 0
     },
     {
@@ -1162,7 +1162,7 @@
       "status": "operational",
       "latencyMs": 38,
       "uptime24h": 99.95,
-      "lastChecked": "2026-08-28T05:15:52.624Z",
+      "lastChecked": "2026-08-28T05:36:07.730Z",
       "errorRatePercent": 0
     }
   ],
@@ -1402,6 +1402,70 @@
     }
   ],
   "logs": [
+    {
+      "agentId": "devops",
+      "level": "info",
+      "module": "FileSyncAgent",
+      "message": "Initiating real recursive file synchronization from AI Studio to GitHub (sanaa234soso-prog/Vireon-AI @ main)...",
+      "id": "log-1787895375582-p9xq9",
+      "timestamp": "2026-08-28T05:36:15.582Z"
+    },
+    {
+      "agentId": "manager",
+      "level": "success",
+      "module": "Private AI Advisor",
+      "message": "Private AI Advisor handled Owner directive: \"افصل Owner عن Users بشكل كامل. المستخدم العاد...\" with full 14-agent workforce dispatch.",
+      "id": "log-1787895290297-52x5m",
+      "timestamp": "2026-08-28T05:34:50.297Z"
+    },
+    {
+      "agentId": "operations",
+      "level": "info",
+      "module": "Autonomous:Detect",
+      "message": "تحليل توقيع الخطأ والأمر: \"افصل Owner عن Users بشكل كامل. المستخدم العادي بعد التسجيل لا يستطيع الوصول إلى أسرار Vireon AI Command Center أو خوادمي أو GitHub Token أو مفاتيح API أو Owner Panel أو بيانات المستخدمين الآخرين. المستخدم يرى فقط مساحته الخاصة: ربط موقعه/متجره/تطبيقه، لوحة Admin خاصة به، سجلات مشاكله وحلولها وإصلاحاتها وSEO، ومربع لإرسال أوامر لوكلائه وخوادمه ضمن موارده فقط. أنا الـ Owner فقط أملك Owner Control Center والوصول إلى الخوادم المركزية، الوكلاء، Secrets، GitHub، إعدادات النظام، المستخدمين، والسجلات العامة. طبّق ذلك Backend Authorization حقيقيًا وليس إخفاء عناصر الواجهة، مع عزل بيانات كل مستخدم ومنع الوصول المباشر عبر API حتى لو حاول تغيير الـ IDs أو الروابط.\". تم فحص سجلات التشغيل الحية وتحديد نطاق التدخل.",
+      "id": "log-1787895257279-uokct",
+      "timestamp": "2026-08-28T05:34:17.279Z"
+    },
+    {
+      "agentId": "manager",
+      "level": "info",
+      "module": "Autonomous Core",
+      "message": "[MISSION START] Received directive: \"افصل Owner عن Users بشكل كامل. المستخدم العادي بعد التسجيل لا يستطيع الوصول إلى أسرار Vireon AI Command Center أو خوادمي أو GitHub Token أو مفاتيح API أو Owner Panel أو بيانات المستخدمين الآخرين. المستخدم يرى فقط مساحته الخاصة: ربط موقعه/متجره/تطبيقه، لوحة Admin خاصة به، سجلات مشاكله وحلولها وإصلاحاتها وSEO، ومربع لإرسال أوامر لوكلائه وخوادمه ضمن موارده فقط. أنا الـ Owner فقط أملك Owner Control Center والوصول إلى الخوادم المركزية، الوكلاء، Secrets، GitHub، إعدادات النظام، المستخدمين، والسجلات العامة. طبّق ذلك Backend Authorization حقيقيًا وليس إخفاء عناصر الواجهة، مع عزل بيانات كل مستخدم ومنع الوصول المباشر عبر API حتى لو حاول تغيير الـ IDs أو الروابط.\" (Source: owner_command)",
+      "id": "log-1787895257276-9qjjf",
+      "timestamp": "2026-08-28T05:34:17.276Z"
+    },
+    {
+      "agentId": "operations",
+      "level": "info",
+      "module": "Autonomous:Detect",
+      "message": "تحليل توقيع الخطأ والأمر: \"افصل Owner عن Users بشكل كامل. المستخدم العادي بعد التسجيل لا يستطيع الوصول إلى أسرار Vireon AI Command Center أو خوادمي أو GitHub Token أو مفاتيح API أو Owner Panel أو بيانات المستخدمين الآخرين.\nالمستخدم يرى فقط مساحته الخاصة: ربط موقعه/متجره/تطبيقه، لوحة Admin خاصة به، سجلات مشاكله وحلولها وإصلاحاتها وSEO، ومربع لإرسال أوامر لوكلائه وخوادمه ضمن موارده فقط.\nأنا الـ Owner فقط أملك Owner Control Center والوصول إلى الخوادم المركزية، الوكلاء، Secrets، GitHub، إعدادات النظام، المستخدمين، والسجلات العامة.\nطبّق ذلك Backend Authorization حقيقيًا وليس إخفاء عناصر الواجهة، مع عزل بيانات كل مستخدم ومنع الوصول المباشر عبر API حتى لو حاول تغيير الـ IDs أو الروابط.\". تم فحص سجلات التشغيل الحية وتحديد نطاق التدخل.",
+      "id": "log-1787895176824-gxkog",
+      "timestamp": "2026-08-28T05:32:56.824Z"
+    },
+    {
+      "agentId": "manager",
+      "level": "info",
+      "module": "Autonomous Core",
+      "message": "[MISSION START] Received directive: \"افصل Owner عن Users بشكل كامل. المستخدم العادي بعد التسجيل لا يستطيع الوصول إلى أسرار Vireon AI Command Center أو خوادمي أو GitHub Token أو مفاتيح API أو Owner Panel أو بيانات المستخدمين الآخرين.\nالمستخدم يرى فقط مساحته الخاصة: ربط موقعه/متجره/تطبيقه، لوحة Admin خاصة به، سجلات مشاكله وحلولها وإصلاحاتها وSEO، ومربع لإرسال أوامر لوكلائه وخوادمه ضمن موارده فقط.\nأنا الـ Owner فقط أملك Owner Control Center والوصول إلى الخوادم المركزية، الوكلاء، Secrets، GitHub، إعدادات النظام، المستخدمين، والسجلات العامة.\nطبّق ذلك Backend Authorization حقيقيًا وليس إخفاء عناصر الواجهة، مع عزل بيانات كل مستخدم ومنع الوصول المباشر عبر API حتى لو حاول تغيير الـ IDs أو الروابط.\" (Source: owner_command)",
+      "id": "log-1787895176820-xz5mu",
+      "timestamp": "2026-08-28T05:32:56.820Z"
+    },
+    {
+      "agentId": "devops",
+      "level": "warn",
+      "module": "FileSyncAgent",
+      "message": "FileSync completed: 1 files pushed to GitHub [Branch: main, Commit: 1a5531d].",
+      "id": "log-1787894156680-em99p",
+      "timestamp": "2026-08-28T05:15:56.680Z"
+    },
+    {
+      "agentId": "developer",
+      "level": "success",
+      "module": "GitHub Engine",
+      "message": "Committed file \"data/vireon_state.json\" to branch \"main\": [Vireon FileSync] Update data/vireon_state.json from AI Studio (SHA: 1a5531d)",
+      "id": "log-1787894156247-xeowk",
+      "timestamp": "2026-08-28T05:15:56.247Z"
+    },
     {
       "agentId": "devops",
       "level": "info",
@@ -3092,7 +3156,7 @@
     }
   ],
   "activeEnvironment": "production",
-  "lastWatchdogSweep": "2026-08-28T05:15:52.782Z",
+  "lastWatchdogSweep": "2026-08-28T05:36:07.823Z",
   "connectedApps": [
     {
       "id": "app-mt816uzo-50vr",
